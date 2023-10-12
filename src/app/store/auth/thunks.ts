@@ -1,10 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { login, logout, checkingCredentials, loginSession } from './authSlice';
+import { login, logout, checkingCredentials, loginSession, onLoadUsers } from './authSlice';
 import holidaysApi from '../../api/holidaysApi';
-import { AuthResponse, Credentials } from '../types/authTypes';
-import { onLogout } from '../events/eventSlice';
-
-
+import { AuthResponse, Credentials, Usuarios } from '../types/authTypes';
+import { onErrorEvents, onLogout } from '../events/eventSlice';
+import { showToast } from '../../holidays/helpers/RenderToast';
 
 
 export const checkingAuthentication = createAsyncThunk<void, Credentials>(
@@ -59,6 +58,38 @@ export const startLogout = createAsyncThunk<void, void>(
     localStorage.removeItem('user-login');
   }
 );
+
+export const startLoadUsers = createAsyncThunk(
+  'auth/listUsers',
+  async (_, { dispatch }) => {
+    try {
+      const response = await holidaysApi.get('/auth/listUsers');
+      const result = response.data;
+      dispatch(onLoadUsers(result.usuarios));
+    } catch (error: any) {
+      console.error('Error al cargar eventos:', error.response.data);
+      dispatch(onErrorEvents(error.response.data.errors));
+    }
+  }
+);
+
+export const updateUserInfo = createAsyncThunk<Usuarios, { userId: string, userData: Partial<Usuarios> }>(
+  'auth/updateInfouser',
+  async ({ userId, userData }, { rejectWithValue }) => {
+    try {
+      const response = await holidaysApi.put<Usuarios>(`/auth/updateInfouser/${userId}`, userData);
+      showToast('Información del usuario actualizada correctamente', 'success');
+      startLoadUsers();
+      return response.data;
+    } catch (error:any) {
+      console.error('Error al actualizar el usuario:', error);
+      showToast(error.response.data.msg, 'error');
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+
 
 
 

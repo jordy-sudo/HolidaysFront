@@ -10,6 +10,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import { UserRole } from '../../store/types/authTypes';
 
 
 export interface MenuItem {
@@ -19,8 +20,10 @@ export interface MenuItem {
   subMenu?: MenuItem[];
 }
 
-export const menuItems: Record<'employee' | 'boss' | 'administrator' | 'hr', MenuItem[]> = {
-  boss: [
+
+
+export const menuItems: Record<UserRole, MenuItem[]> = {
+  Jefe: [
     { key: 'Solicitud', icon: <DirectionsRunIcon />, text: 'Solicitud' },
     { key: 'Profile', icon: <BadgeIcon />, text: 'Profile' },
     {
@@ -33,14 +36,14 @@ export const menuItems: Record<'employee' | 'boss' | 'administrator' | 'hr', Men
       ],
     },
   ],
-  employee: [
+  Empleado: [
     { key: 'Solicitud', icon: <DirectionsRunIcon />, text: 'Solicitud' },
     { key: 'Profile', icon: <BadgeIcon />, text: 'Profile' },
     // { key: 'User Table', icon: <PeopleIcon />, text: 'User Table' },
     // { key: 'History', icon: <HistoryIcon />, text: 'History' },
     // { key: 'Reports', icon: <SummarizeIcon />, text: 'Reports' },
   ],
-  hr: [
+  rrhh: [
     { key: 'Solicitud', icon: <DirectionsRunIcon />, text: 'Solicitud' },
     { key: 'Profile', icon: <BadgeIcon />, text: 'Perfil' },
     // { key: 'User Table', icon: <PeopleIcon />, text: 'User Table' },
@@ -50,13 +53,13 @@ export const menuItems: Record<'employee' | 'boss' | 'administrator' | 'hr', Men
       icon: <Diversity1Icon />,
       text: 'RRHH Menu',
       subMenu: [
-        { key: 'Recepcion', icon: <ChecklistRtlIcon />, text: 'Reportes Nomina' },
-        { key: 'Historial', icon: <FormatAlignLeftIcon />, text: 'Historial de Solicitudes' },
+        { key: 'Recepcion', icon: <ChecklistRtlIcon />, text: 'Reportes' },
+        { key: 'Historial', icon: <FormatAlignLeftIcon />, text: 'Lista Usuarios' },
         { key: 'Users', icon: <ReduceCapacityIcon />, text: 'Usuarios' },
       ],
     },
   ],
-  administrator: [
+  Administrador: [
     { key: 'Solicitud', icon: <DirectionsRunIcon />, text: 'Solicitud' },
     { key: 'Profile', icon: <BadgeIcon />, text: 'Profile' },
     { key: 'User Table', icon: <ReceiptLongIcon />, text: 'User Table' },

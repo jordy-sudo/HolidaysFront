@@ -15,13 +15,14 @@ import { setSelectedOption } from '../../store/sidebar/sidebarSlice';
 import { ExpandLess, ExpandMore, EventRepeat } from '@mui/icons-material';
 import { grey, purple } from '@mui/material/colors';
 import { menuItems } from '../constants/sidebarItems';
+import { UserRole } from '../../store/types/authTypes';
 
 interface SidebarProps {
   drawerWidth?: number;
-  userRole: 'administrator' | 'employee' | 'boss' | 'hr';
+  userRole: UserRole;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ drawerWidth = 240, userRole = 'employee' }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ drawerWidth = 240, userRole = 'Empleado' }) => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
   const dispatch = useAppDispatch();

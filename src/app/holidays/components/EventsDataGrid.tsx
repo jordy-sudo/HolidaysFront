@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { DataGrid, GridColDef, esES, GridToolbar, GridRowParams,GridCellParams } from '@mui/x-data-grid';
-import { format } from 'date-fns';
 import { Event } from '../../store/types/eventTypes';
 import { EventPdfModal } from './EventPdfModal';
+import { formatDateHelp } from '../helpers/FormateDate';
 
 interface EventsDataGridProps {
     eventos: Event[];
@@ -10,10 +10,6 @@ interface EventsDataGridProps {
 
 export const EventsDataGrid: React.FC<EventsDataGridProps> = ({ eventos }) => {
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-
-    const formatDate = (date: string) => {
-        return format(new Date(date), 'dd/MM/yyyy');
-    };
 
     const formatBoolean = (value: boolean) => {
         return value ? 'Sí' : 'No';
@@ -78,10 +74,10 @@ export const EventsDataGrid: React.FC<EventsDataGridProps> = ({ eventos }) => {
             <DataGrid
                 rows={eventos.map(evento => ({
                     ...evento,
-                    start: formatDate(evento.start),
-                    end: formatDate(evento.end),
-                    createdAt: formatDate(evento.createdAt),
-                    updatedAt: formatDate(evento.updatedAt),
+                    start: formatDateHelp(evento.start),
+                    end: formatDateHelp(evento.end),
+                    createdAt: formatDateHelp(evento.createdAt),
+                    updatedAt: formatDateHelp(evento.updatedAt),
                     approved: formatBoolean(evento.approved),
                     hasPdfDocument: formatBoolean(evento.hasPdfDocument),
                 }))}

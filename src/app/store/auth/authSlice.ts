@@ -10,7 +10,8 @@ interface AuthState {
   position: string | null;
   department: string | null;
   email: string | null;
-  errorMessage: string | null;
+  errorMessage: string | null;  
+  activeUsers:[];
 }
 
 const initialState: AuthState = {
@@ -23,6 +24,7 @@ const initialState: AuthState = {
   department:null,
   email:null,
   errorMessage: null,
+  activeUsers:[],
 };
 
 const authSlice = createSlice({
@@ -53,11 +55,14 @@ const authSlice = createSlice({
       state.role = null;
       state.errorMessage = action.payload?.errorMessage || null;
     },
+    onLoadUsers: (state, action: PayloadAction<[]>) => {
+      state.activeUsers = action.payload;
+    },
     checkingCredentials: (state) => {
       state.status = 'checking';
     },
   },
 });
 
-export const { login, loginSession, logout, checkingCredentials } = authSlice.actions;
+export const { login, loginSession, logout, onLoadUsers, checkingCredentials } = authSlice.actions;
 export default authSlice.reducer;

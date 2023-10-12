@@ -1,8 +1,19 @@
-import React from 'react'
-import EventsDataGridGroup from '../components/EventsDataGridGroup'
-
+import  { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { startLoadUsers } from '../../store/auth/thunks';
+import { UsersDataGrid } from '../components/UsersDataGrid';
 export const Historial = () => {
+  const dispatch = useAppDispatch();
+  const { activeUsers } = useAppSelector((state) => state.auth);
+
+
+  useEffect(() => {
+    dispatch(startLoadUsers());
+  }, []);
+
   return (
-    <EventsDataGridGroup/>
+    <>
+      <UsersDataGrid users={activeUsers} />
+    </>
   )
 }

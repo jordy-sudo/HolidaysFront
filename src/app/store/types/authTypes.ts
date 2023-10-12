@@ -13,3 +13,30 @@ export interface Credentials {
     email: string;
     password: string;
 }
+
+export type UserRole = "Empleado" | "Jefe" | "rrhh" | "Administrador";
+
+export interface Usuarios {
+    _id: string;
+    name: string;
+    email: string;
+    ci: string;
+    role: string;
+    position: string;
+    boss: {
+      _id: string;
+      name: string;
+    } | null;
+    isActive: boolean;
+    vacationDays: number;
+    country: string;
+    department: string;
+    area: string;
+    dateOfJoining: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  }
+
+
+  

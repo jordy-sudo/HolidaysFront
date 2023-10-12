@@ -46,6 +46,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const { role } = useAppSelector((state) => state.auth);
     const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
+    console.log(role);
+
     const dispatch = useAppDispatch();
 
     const formatDate = (date: string) => {
@@ -130,7 +132,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     <CloseIcon />
                 </IconButton>
                 {
-                    role == 'boss' && (
+                    role == 'Jefe' && (
                         <IconButton onClick={onAceept} color="warning">
                             <Check />
                         </IconButton>

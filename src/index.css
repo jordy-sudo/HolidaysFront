@@ -18,4 +18,9 @@ code {
   color: black; 
 }
 
+.inactiveUserRow{
+  background-color: rgba(185, 185, 185, 0.459); 
+  color: black; 
+}
+
 

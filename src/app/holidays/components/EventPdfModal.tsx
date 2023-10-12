@@ -94,7 +94,7 @@ export const EventPdfModal: React.FC<EventPdfModalProps> = ({ event, open, onClo
                     <CloseIcon />
                 </IconButton>
                 {
-                    role == 'hr' && (
+                    role == 'rrhh' && (
                         <IconButton onClick={openConfirmationModal} color="warning">
                             <Check />
                         </IconButton>

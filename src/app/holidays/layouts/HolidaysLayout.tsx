@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react'
 import { NavbarHolidays } from '../components/NavbarHolidays';
 import { Sidebar } from '../components/Sidebar';
 import { useAppSelector } from '../../store/hooks';
+import { UserRole } from '../../store/types/authTypes';
 
 interface HolidaysLayoutProps {
   children: ReactNode;
@@ -12,7 +13,7 @@ interface HolidaysLayoutProps {
 const drawerWidth = 240;
 
 export const HolidaysLayout = ({ children }: HolidaysLayoutProps) => {
-  const role = useAppSelector((state) => state.auth.role) as "administrator" | "employee" | "boss" | "hr";
+  const role = useAppSelector((state) => state.auth.role) as UserRole;
   // Utilizamos una type assertion (as) para indicar que role tiene uno de los valores válidos.
 
   return (
