@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DataGrid, GridColDef, esES, GridToolbar, GridRowParams,GridCellParams } from '@mui/x-data-grid';
+import Chip from '@mui/material/Chip';
 import { Event } from '../../store/types/eventTypes';
 import { EventPdfModal } from './EventPdfModal';
 import { formatDateHelp } from '../helpers/FormateDate';
@@ -11,37 +12,21 @@ interface EventsDataGridProps {
 export const EventsDataGrid: React.FC<EventsDataGridProps> = ({ eventos }) => {
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-    const formatBoolean = (value: boolean) => {
-        return value ? 'Sí' : 'No';
-    };
 
     const getRowId = (row: Event) => row.id;
 
-    const getRowClassName = (params: GridRowParams) => {
-        if (params.row.hasPdfDocument === 'Sí') {
-            return 'approvedRow'; // clase CSS para filas aprobadas
-        }
-        return 'notApprovedRow'; // clase CSS para filas no aprobadas
-    };
+
 
      const columns: GridColDef[] = [
         { field: 'title', headerName: 'Título', width: 100 },
         { field: 'start', headerName: 'Inicio', width: 100 },
         { field: 'end', headerName: 'Fin', width: 100 },
-        { field: 'approved', headerName: 'Aprobado', width: 80 },
-        {
-            field: 'hasPdfDocument',
-            headerName: 'Documento Entregado',
-            width: 100,
-            valueFormatter: (params) => formatBoolean(params.value as boolean),
-            cellClassName: (params) => {
-                return params.value ? 'approvedCell' : 'notApprovedCell';
-            },
+        { field: 'approved', headerName: 'Aprobado', width: 80,
             renderCell: (params: GridCellParams) => {
-                if (params.row.hasPdfDocument == "Sí") {
-                    return 'Entregado';
+                if (params.row.approved) {
+                    return 'Si';
                 }
-                return 'Sin Entregar';
+                return 'No';
             },
         },
         { field: 'requestedDays', headerName: 'Días Solicitados', width: 80 },
@@ -57,8 +42,24 @@ export const EventsDataGrid: React.FC<EventsDataGridProps> = ({ eventos }) => {
             width: 150,
             valueGetter: (params) => (params.row.user && params.row.user.boss ? params.row.user.boss.name : ''),
         },
+        {
+            field: 'hasPdfDocument',
+            headerName: 'Documento PDF',
+            width: 150,
+            renderCell: (params: GridCellParams) => {
+              const isDocumentDelivered = params.row.hasPdfDocument;
+              return (
+                <Chip
+                  size="medium" 
+                  label={isDocumentDelivered ? 'Entregado' : 'Sin Entregar'}
+                  color={isDocumentDelivered ? 'success' : 'error'}
+                  variant="outlined"
+                />
+              );
+            },
+          },
         { field: 'createdAt', headerName: 'Creado', width: 100 },
-        { field: 'updatedAt', headerName: 'Aceptado', width: 100 },
+        // { field: 'updatedAt', headerName: 'Aceptado', width: 100 },
     ];
 
     const openDetails = (event: Event) => {
@@ -78,8 +79,7 @@ export const EventsDataGrid: React.FC<EventsDataGridProps> = ({ eventos }) => {
                     end: formatDateHelp(evento.end),
                     createdAt: formatDateHelp(evento.createdAt),
                     updatedAt: formatDateHelp(evento.updatedAt),
-                    approved: formatBoolean(evento.approved),
-                    hasPdfDocument: formatBoolean(evento.hasPdfDocument),
+                 
                 }))}
                 columns={columns}
                 localeText={esES.components.MuiDataGrid.defaultProps.localeText}
@@ -87,12 +87,12 @@ export const EventsDataGrid: React.FC<EventsDataGridProps> = ({ eventos }) => {
                     toolbar: GridToolbar,
                 }}
                 onRowClick={(params: GridRowParams) => {
-                    if(params.row.hasPdfDocument !== 'Sí'){
+                    if(!params.row.hasPdfDocument){
                         openDetails(params.row as Event);
                     }
                 }}
                 getRowId={getRowId}
-                getRowClassName={getRowClassName}
+
             />
             {selectedEvent && (
                 <EventPdfModal

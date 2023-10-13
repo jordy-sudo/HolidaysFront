@@ -10,10 +10,12 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { green } from '@mui/material/colors';
+import { UploadUsersModal } from '../components/UploadUsersModal';
 
 export const Users = () => {
   const [isAccordion1Open, setIsAccordion1Open] = useState(false);
   const [isAccordion2Open, setIsAccordion2Open] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   // const [isAccordion3Open, setIsAccordion3Open] = useState(false);
 
   const handleAccordion1Toggle = () => {
@@ -30,6 +32,14 @@ export const Users = () => {
       // Aquí puedes procesar el archivo seleccionado
       console.log(selectedFile);
     }
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   // const handleAccordion3Toggle = () => {
@@ -50,20 +60,20 @@ export const Users = () => {
             <Typography>
               Esta opción te permite cargar usuarios en masa. Al hacer clic en el botón 
               "De color Verde", se realizará una acción específica para cargar 
-              un gran número de usuarios en el sistema teniendo en cuenta el formato establecido.
+              un gran número de usuarios en el sistema teniendo en cuenta el formato establecido para obtener el formato dar click en el botón
+              "De color Rojo".
             </Typography>
-            <label htmlFor="file-input" style={{ marginLeft: '20px' }}>
-              <IconButton style={{ color: green[600] }} aria-label="Cargar Excel" component="span">
+            <label htmlFor="file-input" style={{ marginLeft: '10px' }}>
+              <IconButton style={{ color: green[600] }} aria-label="Cargar Excel" component="span" onClick={handleOpenModal}>
                 <InsertDriveFileIcon />
               </IconButton>
             </label>
-            <input
-              id="file-input"
-              type="file"
-              accept=".xlsx, .xls"
-              onChange={handleFileInputChange}
-              style={{ display: 'none' }}
-            />
+           
+             <label htmlFor="file-input" style={{ marginLeft: '20px' }}>
+              <IconButton style={{ color: 'red' }} aria-label="Cargar Excel" component="span">
+                <InsertDriveFileIcon />
+              </IconButton>
+            </label>
           </Box>
         </AccordionDetails>
       </Accordion>
@@ -87,6 +97,7 @@ export const Users = () => {
           </Box>
         </AccordionDetails>
       </Accordion> */}
+       <UploadUsersModal open={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }

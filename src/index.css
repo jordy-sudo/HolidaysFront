@@ -13,9 +13,16 @@ code {
 }
 
 
-.approvedRow {
-  background-color: rgb(223, 252, 223); 
-  color: black; 
+/* Estilos para celdas aprobadas */
+.approvedCell {
+  backgroundColor: #AED581; /* Verde pastel */
+  borderRadius: 8px; /* Bordes redondeados */
+}
+
+/* Estilos para celdas no aprobadas */
+.notApprovedCell {
+  backgroundColor: #EF9A9A; /* Rojo pastel */
+  borderRadius: 8px; /* Bordes redondeados */
 }
 
 .inactiveUserRow{

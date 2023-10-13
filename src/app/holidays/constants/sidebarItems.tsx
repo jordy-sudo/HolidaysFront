@@ -55,7 +55,7 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
       subMenu: [
         { key: 'Recepcion', icon: <ChecklistRtlIcon />, text: 'Reportes' },
         { key: 'Historial', icon: <FormatAlignLeftIcon />, text: 'Lista Usuarios' },
-        { key: 'Users', icon: <ReduceCapacityIcon />, text: 'Usuarios' },
+        { key: 'Users', icon: <ReduceCapacityIcon />, text: 'Configuracion' },
       ],
     },
   ],

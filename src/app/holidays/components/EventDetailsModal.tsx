@@ -26,6 +26,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Check } from '@mui/icons-material';
 import { aceptEvent } from '../../store/events/thunks';
 import { ConfirmationDialog } from './ConfirmationDialogModal';
+import { formatDateHelp } from '../helpers/FormateDate';
 
 
 
@@ -46,13 +47,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     const { role } = useAppSelector((state) => state.auth);
     const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
 
-    console.log(role);
 
     const dispatch = useAppDispatch();
-
-    const formatDate = (date: string) => {
-        return format(new Date(date), 'dd/MM/yyyy');
-    };
 
     const openConfirmationModal = () => {
         setConfirmationModalOpen(true);
@@ -88,12 +84,12 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                             </TableRow>
                             <TableRow hover>
                                 <TableCell style={{ fontWeight: 'bold' }}>Fecha de Inicio</TableCell>
-                                <TableCell>{formatDate(event.start)}</TableCell>
+                                <TableCell>{formatDateHelp(event.start)}</TableCell>
                             </TableRow>
                             {event.end && (
                                 <TableRow hover>
                                     <TableCell style={{ fontWeight: 'bold' }}>Fecha de Finalización</TableCell>
-                                    <TableCell>{formatDate(event.end)}</TableCell>
+                                    <TableCell>{formatDateHelp(event.end)}</TableCell>
                                 </TableRow>
                             )}
                             <TableRow hover sx={{

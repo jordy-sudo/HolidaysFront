@@ -18,6 +18,7 @@ import { Usuarios } from '../../store/types/authTypes';
 import { formatDateHelp } from '../helpers/FormateDate';
 import { useAppDispatch } from '../../store/hooks';
 import { updateUserInfo } from '../../store/auth/thunks';
+import { ConfirmationDialog } from './ConfirmationDialogModal';
 
 interface UserDetailsModalProps {
     open: boolean;
@@ -34,12 +35,17 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
 }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [editedUser, setEditedUser] = useState<Usuarios>(user);
+    const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
     useEffect(() => {
         setEditedUser(user);
     }, [user]);
+
+    const closeConfirmationModal = () => {
+        setConfirmationModalOpen(false);
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked, value } = e.target;
@@ -52,10 +58,11 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
 
 
     const handleSaveChanges = () => {
-        console.log({ userId: editedUser._id, userData: editedUser });
-        dispatch(updateUserInfo({ userId: editedUser._id, userData: editedUser }));
-        setIsEditMode(false);
-        // onClose();
+        setConfirmationModalOpen(true);
+        if(isConfirmationModalOpen){
+            dispatch(updateUserInfo({ userId: editedUser._id, userData: editedUser }));
+            setIsEditMode(false);
+        }
     };
 
     return (
@@ -202,6 +209,12 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
                     Cerrar
                 </Button>
             </DialogActions>
+            <ConfirmationDialog
+                open={isConfirmationModalOpen}
+                onClose={closeConfirmationModal}
+                onConfirm={handleSaveChanges}
+                title='Aprobacion de vacaciones'
+            />
         </Dialog>
 
     )

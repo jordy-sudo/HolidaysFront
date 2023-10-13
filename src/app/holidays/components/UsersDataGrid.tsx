@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DataGrid, esES, GridToolbar, GridRowParams, GridCellParams } from '@mui/x-data-grid';
+import Chip from '@mui/material/Chip';
 import { Usuarios } from '../../store/types/authTypes';
 import { formatDateHelp } from '../helpers/FormateDate';
 import { UserModal } from './UserModal';
@@ -11,13 +12,18 @@ const columns = [
     { field: 'ci', headerName: 'Cedula', width: 120 },
     { field: 'position', headerName: 'Posición', width: 250 },
     {
-        field: 'isActive', headerName: 'Status', width: 90,
+        field: 'isActive', headerName: 'Status', width: 100,
         renderCell: (params: GridCellParams) => {
-            if (params.row.isActive) {
-                return 'Activo';
-            }
-            return 'Inactivo';
-        },
+            const isDocumentDelivered = params.row.isActive;
+            return (
+              <Chip
+                size="medium" 
+                label={isDocumentDelivered ? 'Activo' : 'Inactivo'}
+                color={isDocumentDelivered ? 'success' : 'error'}
+                variant="outlined"
+              />
+            );
+          },
     },
     { field: 'dateOfJoining', headerName: 'Fecha de Ingreso', width: 150 },
     { field: 'vacationDays', headerName: 'Vacaciones disponibles', width: 200 },
@@ -37,12 +43,6 @@ export const UsersDataGrid: React.FC<DataTableProps> = ({ users }) => {
         setSelectedUser(user);
     };
 
-    const getRowClassName = (params: GridRowParams) => {
-        if (params.row.isActive) {
-            return ''; // clase CSS para filas aprobadas
-        }
-        return 'inactiveUserRow'; // clase CSS para filas no aprobadas
-    };
 
     const closeDetailsUser = () => {
         dispatch(startLoadUsers());
@@ -67,7 +67,6 @@ export const UsersDataGrid: React.FC<DataTableProps> = ({ users }) => {
                     }
                 }}
                 pageSizeOptions={[10,20,50,100]} 
-                getRowClassName={getRowClassName}
             />
             {selectedUser && (
                 <UserModal
