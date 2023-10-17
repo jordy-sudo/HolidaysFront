@@ -43,9 +43,11 @@ export const UploadUsersModal: React.FC<UploadUsersModalProps> = ({ open, onClos
       };
 
     const handleSaveUsers = () => {
-        console.log('Guardando usuarios:', excelData);
-        // Lógica para guardar usuarios
-        onClose(); // Cerrar el modal después de guardar los usuarios
+        if(excelData.length > 0){
+            console.log('Guardando usuarios:', excelData);
+            onClose(); // Cerrar el modal después de guardar los usuarios
+        }
+        showToast('Debes seleccionar algun archivo','error');
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -56,7 +58,7 @@ export const UploadUsersModal: React.FC<UploadUsersModalProps> = ({ open, onClos
     });
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>Subir Archivo Excel</DialogTitle>
+            <DialogTitle>Subir Usuarios masivamente</DialogTitle>
             <DialogContent>
                 <Box {...getRootProps()} style={dropzoneStyles}>
                     <input {...getInputProps()} />

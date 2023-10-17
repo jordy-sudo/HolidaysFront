@@ -23,6 +23,11 @@ import { Event } from '../../store/types/eventTypes';
 import { EventDetailsModal } from '../components/EventDetailsModal';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { loadEvents } from '../../store/events/thunks';
+const getInitials = (name: string): string => {
+  const nameArray = name.split(' ');
+  const initials = nameArray.map((word) => word[0]).join('');
+  return initials.toUpperCase();
+};
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +35,9 @@ export const Profile = () => {
   const [expanded, setExpanded] = React.useState(false);
   const { name, position, department, email, role } = useAppSelector((state) => state.auth);
   const { events } = useAppSelector((state) => state.event);
+  const avatarSrc ='';
 
+  
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -68,7 +75,9 @@ export const Profile = () => {
               alt="Avatar"
               src="URL_DE_LA_IMAGEN"
               sx={{ width: 100, height: 100, margin: '0 auto 1rem auto' }}
-            />
+            >
+              {avatarSrc ? null : getInitials(name || '')}
+            </Avatar>
             <Typography variant="h5" component="div" gutterBottom color="primary">
               {name}
             </Typography>
@@ -153,7 +162,7 @@ export const Profile = () => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={event.user.name}
-                      color="primary"
+                      
                       secondary={
                         <React.Fragment>
                           <Typography
