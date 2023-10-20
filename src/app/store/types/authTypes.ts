@@ -39,4 +39,17 @@ export interface Usuarios {
   }
 
 
-  
+  export interface UserData {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    boss: string;
+    position: string;
+    vacationDays: number;
+    ci: number;
+    country: string;
+    department: string;
+    area: string;
+    dateOfJoining: string; 
+}

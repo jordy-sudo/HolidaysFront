@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { startLogout } from "../../store/auth/thunks";
-import { loadNotifications } from "../../store/events/thunks";
+import { aceptEvent, loadNotifications } from "../../store/events/thunks";
 import { Event } from "../../store/types/eventTypes";
 import { EventDetailsModal } from "./EventDetailsModal";
 
@@ -57,6 +57,11 @@ export const NavbarHolidays = ({
   };
 
   const handleNotificationClick = (event: Event) => {
+    const updateData = {
+      camp: "show",
+      newStatus: true,
+    };
+    dispatch(aceptEvent({ eventId: event.id, requestData: updateData }));
     setSelectedEvent(event);
   };
 
@@ -111,12 +116,12 @@ export const NavbarHolidays = ({
           <LogoutOutlined />
         </IconButton>
       </Toolbar>
-      { selectedEvent &&(
+      {selectedEvent && (
         <EventDetailsModal
-        open={!!selectedEvent}
-        onClose={closeEventDetailsModal}
-        event={selectedEvent}
-        title="Notificacion de Solicitud"
+          open={!!selectedEvent}
+          onClose={closeEventDetailsModal}
+          event={selectedEvent}
+          title="Notificacion de Solicitud"
         />)
       }
     </AppBar>

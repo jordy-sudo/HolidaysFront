@@ -10,6 +10,8 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import BackupTableIcon from '@mui/icons-material/BackupTable';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { UserRole } from '../../store/types/authTypes';
 
 
@@ -29,10 +31,10 @@ export const menuItems: Record<UserRole, MenuItem[]> = {
     {
       key: 'Solicitudes',
       icon: <FolderSharedIcon />,
-      text: 'Solicitudes',
+      text: 'Personal a Cargo',
       subMenu: [
-        { key: 'My Requests', icon: <AssignmentIndIcon />, text: 'My Requests' },
-        { key: 'New Request', icon: <AssignmentIndIcon />, text: 'New Request' },
+        { key: 'SolicitudesPersonal', icon: <CalendarMonthIcon />, text: 'Solicitudes' },
+        { key: 'ListPersonal', icon: <BackupTableIcon />, text: 'Listado' },
       ],
     },
   ],

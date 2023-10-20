@@ -3,6 +3,7 @@ import { EventResponse, Event, EventError } from '../types/eventTypes';
 
 interface EventState {
   events: Event[];
+  eventsWithBoss: Event[];
   notifications:Event[];
   documents:Event[];
   isLoadingEvents: boolean;
@@ -12,6 +13,7 @@ interface EventState {
 const initialState: EventState = {
   events: [],
   notifications:[],
+  eventsWithBoss:[],
   documents:[],
   isLoadingEvents: true,
   errorMessage: null,
@@ -24,6 +26,10 @@ const eventSlice = createSlice({
     onLoadEvents: (state, action: PayloadAction<EventResponse>) => {
       state.isLoadingEvents = false;
       state.events = action.payload.eventos; 
+    },
+    onLoadEventswithBoss: (state, action: PayloadAction<EventResponse>) => {
+      state.isLoadingEvents = false;
+      state.eventsWithBoss = action.payload.eventos; 
     },
     onLoadNotifications:(state, action: PayloadAction<EventResponse>)=>{
       state.isLoadingEvents = false;
@@ -47,5 +53,5 @@ const eventSlice = createSlice({
   },
 });
 
-export const { onLoadEvents, onErrorEvents, onLoadNotifications,onLoadDocuments, onLogout } = eventSlice.actions;
+export const { onLoadEvents, onErrorEvents, onLoadNotifications,onLoadDocuments,onLoadEventswithBoss, onLogout } = eventSlice.actions;
 export default eventSlice.reducer;

@@ -11,43 +11,83 @@ import {
 import { useDropzone } from 'react-dropzone';
 import * as XLSX from 'xlsx';
 import { showToast } from '../helpers/RenderToast';
+import { processExcelFile } from '../../store/auth/thunks';
+import { useAppDispatch } from '../../store/hooks';
+import { Spinner } from './Spinner';
 
 interface UploadUsersModalProps {
     open: boolean;
     onClose: () => void;
 }
 
+interface CustomSheet2JSONOpts extends XLSX.Sheet2JSONOpts {
+    cellDates: boolean;
+}
+
 export const UploadUsersModal: React.FC<UploadUsersModalProps> = ({ open, onClose }) => {
     const [excelData, setExcelData] = useState<any[]>([]);
+    const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState(false);
 
     const onDrop = (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) {
-          showToast('Por favor, selecciona un archivo valido El archivo debe ser un archivo Excel (.xlsx o .xls)', 'error');
-          return;
+            showToast('Por favor, selecciona un archivo válido. El archivo debe ser un archivo Excel (.xlsx o .xls)', 'error');
+            return;
         }
-      
+    
         const file = acceptedFiles[0];
-
-      
         const reader = new FileReader();
-      
+    
         reader.onload = (e) => {
-          const data = new Uint8Array(e.target?.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const firstSheetName = workbook.SheetNames[0];
-          const excelData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
-          setExcelData(excelData);
+            if (e.target?.result) {
+                const data = new Uint8Array(e.target.result as ArrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+    
+                // Configuración para reconocer el formato de fecha personalizado
+                const sheet = workbook.Sheets[firstSheetName];
+                const options: CustomSheet2JSONOpts = {
+                    header:0,
+                    raw: false,
+                    cellDates: true, // Esto permite reconocer el formato de fecha personalizado
+                };
+                const excelData: any[] = XLSX.utils.sheet_to_json(sheet, options);
+    
+                // Convertir el formato de fecha en cada fila
+                const excelDataFormatted = excelData.map((row) => {
+                    const originalDate = new Date(row.dateOfJoining);
+                    const formattedDate = `${originalDate.getFullYear()}/${originalDate.getMonth() + 1}/${originalDate.getDate()}`;
+                    // const formattedDate = `${originalDate.getDate()}/${originalDate.getMonth() + 1}/${originalDate.getFullYear()}`;
+    
+                    return {
+                        ...row,
+                        dateOfJoining: formattedDate,
+                    };
+                });
+    
+                setExcelData(excelDataFormatted);
+            }
         };
-      
+    
         reader.readAsArrayBuffer(file);
-      };
-
-    const handleSaveUsers = () => {
-        if(excelData.length > 0){
-            console.log('Guardando usuarios:', excelData);
-            onClose(); // Cerrar el modal después de guardar los usuarios
+    };
+    const handleSaveUsers = async () => {
+        if (excelData.length > 0) {
+            setLoading(true);
+            try {
+                const promises = excelData.map((element) => dispatch(processExcelFile(element)));
+                await Promise.all(promises);
+                onClose();
+                showToast('Usuarios cargados correctamente', 'success');
+            } catch (error) {
+                console.error('Error al cargar usuarios', error);
+                showToast('Error al cargar los usuarios', 'error');
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            showToast('Debes seleccionar algun archivo', 'error');
         }
-        showToast('Debes seleccionar algun archivo','error');
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -60,6 +100,8 @@ export const UploadUsersModal: React.FC<UploadUsersModalProps> = ({ open, onClos
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Subir Usuarios masivamente</DialogTitle>
             <DialogContent>
+            {loading && (<Spinner/>)}
+
                 <Box {...getRootProps()} style={dropzoneStyles}>
                     <input {...getInputProps()} />
                     <Typography variant="body1">Arrastra y suelta un archivo Excel aquí, o haz clic para seleccionar uno</Typography>

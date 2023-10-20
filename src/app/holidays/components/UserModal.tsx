@@ -64,7 +64,6 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
             setIsEditMode(false);
         }
     };
-
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth sx={{ maxWidth: theme.breakpoints.values.lg, margin: 'auto' }}>
             <DialogTitle sx={{ backgroundColor: 'primary.main' }}>
@@ -181,7 +180,7 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
                             </TableRow>
                             <TableRow hover>
                                 <TableCell style={{ fontWeight: 'bold' }}>Fecha de Ingreso</TableCell>
-                                <TableCell>{formatDateHelp(user.dateOfJoining)}</TableCell>
+                                <TableCell>{user.dateOfJoining}</TableCell>
                             </TableRow>
                             <TableRow hover>
                                 <TableCell style={{ fontWeight: 'bold' }}>Creado en</TableCell>

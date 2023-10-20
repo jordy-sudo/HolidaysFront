@@ -18,7 +18,6 @@ import {
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { format } from 'date-fns';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { PdfDocument } from './PdfDocument';
 import { Event } from '../../store/types/eventTypes';
@@ -34,7 +33,7 @@ interface EventDetailsModalProps {
     open: boolean;
     onClose: () => void;
     event: Event;
-    title:string;
+    title: string;
 }
 
 export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
@@ -44,8 +43,9 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
     title,
 }) => {
 
-    const { role } = useAppSelector((state) => state.auth);
+    const { role, name } = useAppSelector((state) => state.auth);
     const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+    const loggedInUserName = name ? name || '' : '';
 
 
     const dispatch = useAppDispatch();
@@ -62,8 +62,8 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
         const updateData = {
             camp: "approved",
             newStatus: true,
-          };
-        
+        };
+
         dispatch(aceptEvent({ eventId: event.id, requestData: updateData }));
         onClose();
     }
@@ -110,25 +110,32 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
             </DialogContent>
             <DialogActions>
                 {
-                    event.approved && (<Box sx={{ position: 'absolute', bottom: '19px', left: '16px' }}>
-                        <PDFDownloadLink document={<PdfDocument event={event} />} fileName={`${event.user.name}_vacaciones.pdf`}>
-                            <Button sx={{
-                                transition: 'transform 0.2s',
-                                '&:hover': {
-                                    transform: 'scale(1.1)',
-                                },
-                            }}
-                                component="label" variant="contained" color='error' startIcon={<PictureAsPdfIcon />}>
-                                Descargar Solicitud
-                            </Button>
-                        </PDFDownloadLink>
-                    </Box>)
+                    event.approved && event.user && event.user.name && (
+                        <Box sx={{ position: 'absolute', bottom: '19px', left: '16px' }}>
+                            <PDFDownloadLink document={<PdfDocument event={event} />} fileName={`${event.user.name ? event.user.name : ''}_vacaciones.pdf`}>
+                                <Button
+                                    sx={{
+                                        transition: 'transform 0.2s',
+                                        '&:hover': {
+                                            transform: 'scale(1.1)',
+                                        },
+                                    }}
+                                    component="label"
+                                    variant="contained"
+                                    color='error'
+                                    startIcon={<PictureAsPdfIcon />}
+                                >
+                                    Descargar Solicitud
+                                </Button>
+                            </PDFDownloadLink>
+                        </Box>
+                    )
                 }
                 <IconButton onClick={onClose} color="error">
                     <CloseIcon />
                 </IconButton>
                 {
-                    role == 'Jefe' && (
+                    role === 'Jefe' && loggedInUserName && event.user && event.user.name && loggedInUserName !== event.user.name && (
                         <IconButton onClick={onAceept} color="warning">
                             <Check />
                         </IconButton>
@@ -142,7 +149,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     </PDFViewer>
                 </Dialog>
             )} */}
-             <ConfirmationDialog
+            <ConfirmationDialog
                 open={isConfirmationModalOpen}
                 onClose={closeConfirmationModal}
                 onConfirm={onAceept}

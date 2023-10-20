@@ -202,7 +202,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({ event }) => {
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>APROBADO POR: </Text>
-            <Text style={styles.text}>{event.user.boss.name}</Text>
+            <Text style={styles.text}>{event.user?.boss?.name}</Text>
           </View>
         </View>
         {/* Pie de página */}

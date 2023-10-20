@@ -1,9 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { login, logout, checkingCredentials, loginSession, onLoadUsers } from './authSlice';
 import holidaysApi from '../../api/holidaysApi';
-import { AuthResponse, Credentials, Usuarios } from '../types/authTypes';
+import { AuthResponse, Credentials, UserData, Usuarios } from '../types/authTypes';
 import { onErrorEvents, onLogout } from '../events/eventSlice';
 import { showToast } from '../../holidays/helpers/RenderToast';
+import * as XLSX from 'xlsx';
+import { AppDispatch, RootState } from '../store';
 
 
 export const checkingAuthentication = createAsyncThunk<void, Credentials>(
@@ -73,6 +75,32 @@ export const startLoadUsers = createAsyncThunk(
   }
 );
 
+export const processExcelFile = createAsyncThunk<
+  void,
+  File,
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+  }
+>('auth/processExcel', async (file, { dispatch }) => {
+  try {
+    const response = await holidaysApi.post('/auth/new', file);
+    showToast(response.data.msg, 'success');
+  } catch (error: any) {
+    console.error('Error al cargar usuarios:', error.response.data);
+    if (error.response.data.errors) {
+      dispatch(onErrorEvents(error.response.data.errors));
+      for (const key in error.response.data.errors) {
+        showToast(error.response.data.errors[key].msg);
+      }
+    } else {
+      dispatch(onErrorEvents(error.response.data));
+      showToast(error.response.data.msg, 'error');
+    }
+  }
+}
+);
+
 export const updateUserInfo = createAsyncThunk<Usuarios, { userId: string, userData: Partial<Usuarios> }>(
   'auth/updateInfouser',
   async ({ userId, userData }, { rejectWithValue }) => {
@@ -81,7 +109,7 @@ export const updateUserInfo = createAsyncThunk<Usuarios, { userId: string, userD
       showToast('Información del usuario actualizada correctamente', 'success');
       startLoadUsers();
       return response.data;
-    } catch (error:any) {
+    } catch (error: any) {
       console.error('Error al actualizar el usuario:', error);
       showToast(error.response.data.msg, 'error');
       return rejectWithValue(error.response?.data);
