@@ -93,23 +93,31 @@ export const NavbarHolidays = ({
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
           >
-            {notifications.map((notification) => (
-              <MenuItem
-                key={notification.id}
-                onClick={() => handleNotificationClick(notification)}
-              >
-                <Card>
-                  <CardContent>
-                    <Typography component="div">
-                      {notification.user.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Solicita: {notification.title}
-                    </Typography>
-                  </CardContent>
-                </Card>
+            {notifications.length === 0 ? (
+              <MenuItem>
+                <Typography variant="body2" color="textSecondary">
+                  No hay notificaciones
+                </Typography>
               </MenuItem>
-            ))}
+            ) : (
+              notifications.map((notification) => (
+                <MenuItem
+                  key={notification.id}
+                  onClick={() => handleNotificationClick(notification)}
+                >
+                  <Card>
+                    <CardContent>
+                      <Typography component="div">
+                        {notification.user.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Solicita: {notification.title}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </MenuItem>
+              ))
+            )}
           </Menu>
         </Grid>
         <IconButton color="error" onClick={onLogout}>

@@ -114,7 +114,7 @@ export const PdfDocument: React.FC<PdfDocumentProps> = ({ event }) => {
             </View>
             <View style={styles.column}>
               <Text style={styles.label}>FECHA DE INGRESO:</Text>
-              <Text style={styles.text}>{formatDate(event.user.dateOfJoining)}</Text>
+              {/* <Text style={styles.text}>{formatDate(event.user.dateOfJoining)}</Text> */}
             </View>
             <View style={styles.column}>
               <Text style={styles.label}>CIUDAD:</Text>

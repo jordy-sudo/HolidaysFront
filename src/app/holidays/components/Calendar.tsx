@@ -8,6 +8,7 @@ import { EventContentArg } from '@fullcalendar/common';
 import { EventDetailsModal } from './EventDetailsModal';
 import { Event } from '../../store/types/eventTypes';
 import moment from 'moment';
+import { useAppSelector } from '../../store/hooks';
 
 interface CalendarProps {
   events: Event[];
@@ -17,7 +18,8 @@ interface CalendarProps {
 export const Calendar: React.FC<CalendarProps> = ({ events }) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const firstEventUserVacationDays = events[0]?.user?.vacationDays;
+  const { vacationDays,dateOfJoining } = useAppSelector((state) => state.auth);
+  // const firstEventUserVacationDays = events[0]?.user?.vacationDays;
 
 
   const eventContent = (arg: EventContentArg) => {
@@ -68,7 +70,7 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
           Mi Calendario
         </Typography>
         <Typography sx={{ marginLeft: 10 }} variant="h5" gutterBottom>
-          Vacaciones disponibles:{firstEventUserVacationDays} dias
+          Vacaciones disponibles: {vacationDays} dias
         </Typography>
       </Box>
       <Box boxShadow="0px 5px 5px -3px rgba(255, 235, 59, 0.2)"

@@ -84,7 +84,7 @@ export const Profile = () => {
             <Typography color="textSecondary">{position}</Typography>
           </CardContent>
           <CardActions sx={{ justifyContent: 'center' }}>
-            <Box component="label" sx={{ display: 'inline-flex', alignItems: 'center' }}>
+            {/* <Box component="label" sx={{ display: 'inline-flex', alignItems: 'center' }}>
               <Button
                 variant="outlined"
                 component="div"
@@ -93,7 +93,7 @@ export const Profile = () => {
                 Subir Imagen
                 <input type="file" style={{ display: 'none' }} />
               </Button>
-            </Box>
+            </Box> */}
           </CardActions>
         </Card>
       </Grid>

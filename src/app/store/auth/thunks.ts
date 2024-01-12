@@ -1,10 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { login, logout, checkingCredentials, loginSession, onLoadUsers } from './authSlice';
 import holidaysApi from '../../api/holidaysApi';
-import { AuthResponse, Credentials, UserData, Usuarios } from '../types/authTypes';
+import { AuthResponse, Credentials, Usuarios } from '../types/authTypes';
 import { onErrorEvents, onLogout } from '../events/eventSlice';
 import { showToast } from '../../holidays/helpers/RenderToast';
-import * as XLSX from 'xlsx';
 import { AppDispatch, RootState } from '../store';
 
 
@@ -28,6 +27,7 @@ export const startLoginWithEmailPassword = createAsyncThunk<AuthResponse, Creden
       localStorage.setItem('token', result.token);
       localStorage.setItem('token-init-date', new Date().getTime().toString());
       localStorage.setItem('user-login', JSON.stringify(result));
+      showToast('Bienvenido',"success");
       dispatch(login(result));
       return result;
     } catch (error: any) {
@@ -75,10 +75,7 @@ export const startLoadUsers = createAsyncThunk(
   }
 );
 
-export const processExcelFile = createAsyncThunk<
-  void,
-  File,
-  {
+export const processExcelFile = createAsyncThunk<void,File,{
     dispatch: AppDispatch;
     state: RootState;
   }

@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ drawerWidth = 240, userRole = 
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
             <EventRepeat color='secondary' /> {' '}
-            Vacaciones Icesa
+            VacacionesCresa
           </Typography>
         </Toolbar>
         <List>

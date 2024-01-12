@@ -6,6 +6,7 @@ interface EventState {
   eventsWithBoss: Event[];
   notifications:Event[];
   documents:Event[];
+  usersxBoss:[];
   isLoadingEvents: boolean;
   errorMessage: string | null;
 }
@@ -15,6 +16,7 @@ const initialState: EventState = {
   notifications:[],
   eventsWithBoss:[],
   documents:[],
+  usersxBoss:[],
   isLoadingEvents: true,
   errorMessage: null,
 };
@@ -35,6 +37,10 @@ const eventSlice = createSlice({
       state.isLoadingEvents = false;
       state.notifications = action.payload.eventos; 
     },
+    onLoadUsersxBoss:(state, action: PayloadAction<[]>)=>{
+      state.isLoadingEvents = false;
+      state.usersxBoss = action.payload; 
+    },
     onLoadDocuments:(state, action: PayloadAction<EventResponse>)=>{
       state.isLoadingEvents = false;
       state.documents = action.payload.eventos; 
@@ -53,5 +59,15 @@ const eventSlice = createSlice({
   },
 });
 
-export const { onLoadEvents, onErrorEvents, onLoadNotifications,onLoadDocuments,onLoadEventswithBoss, onLogout } = eventSlice.actions;
+export const { onLoadEvents, 
+  onErrorEvents, 
+  onLoadNotifications,
+  onLoadDocuments,
+  onLoadEventswithBoss, 
+  onLogout,
+  onLoadUsersxBoss,
+  } = eventSlice.actions;
 export default eventSlice.reducer;
+
+
+  

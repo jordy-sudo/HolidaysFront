@@ -7,6 +7,8 @@ export interface AuthResponse {
     msg: string;
     position:string;
     department:string;
+    vacationDays:number;
+    dateOfJoining:string;
     email:string;
 }
 export interface Credentials {

@@ -9,6 +9,8 @@ interface AuthState {
   role:string | null;
   position: string | null;
   department: string | null;
+  vacationDays: number | null;
+  dateOfJoining : string | null;
   email: string | null;
   errorMessage: string | null;  
   activeUsers:[];
@@ -22,6 +24,8 @@ const initialState: AuthState = {
   role:null,
   position:null,
   department:null,
+  vacationDays:null,
+  dateOfJoining:null,
   email:null,
   errorMessage: null,
   activeUsers:[],
@@ -38,6 +42,8 @@ const authSlice = createSlice({
       state.role = action.payload.role;
       state.department = action.payload.department;
       state.position = action.payload.position;
+      state.vacationDays = action.payload.vacationDays;
+      state.dateOfJoining = action.payload.dateOfJoining;
       state.email = action.payload.email;
       state.errorMessage = null;
     },

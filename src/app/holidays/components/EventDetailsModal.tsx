@@ -135,7 +135,7 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     <CloseIcon />
                 </IconButton>
                 {
-                    role === 'Jefe' && loggedInUserName && event.user && event.user.name && loggedInUserName !== event.user.name && (
+                    role === 'Jefe' && loggedInUserName && event.user && event.user.name && loggedInUserName !== event.user.name && !event.approved && (
                         <IconButton onClick={onAceept} color="warning">
                             <Check />
                         </IconButton>

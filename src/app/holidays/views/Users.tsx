@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
 import {
   Accordion,
   AccordionSummary,
@@ -28,13 +28,13 @@ export const Users = () => {
     setIsAccordion2Open(!isAccordion2Open);
   };
 
-  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const selectedFile: File = event.target.files[0];
-      // Aquí puedes procesar el archivo seleccionado
-      console.log(selectedFile);
-    }
-  };
+  // const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     const selectedFile: File = event.target.files[0];
+  //     // Aquí puedes procesar el archivo seleccionado
+  //     console.log(selectedFile);
+  //   }
+  // };
 
   const handleOpenModal = () => {
     setIsModalOpen(true);

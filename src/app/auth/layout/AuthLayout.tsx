@@ -30,7 +30,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title = '' }) 
           alignItems: 'center', 
         }}
       >
-        <img src="/Icesa.png" alt="Logo" style={{ maxWidth: '100px', marginBottom: '16px' }} />
+        <img src="/Logo.png" alt="Logo" style={{ maxWidth: '250px', marginBottom: '10px' }} />
 
         <Typography variant="h5" sx={{ mb: 1 }}>
           {title}

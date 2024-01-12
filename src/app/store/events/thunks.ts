@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { onErrorEvents, onLoadDocuments, onLoadEvents, onLoadEventswithBoss, onLoadNotifications } from './eventSlice';
+import { onErrorEvents, onLoadDocuments, onLoadEvents, onLoadEventswithBoss, onLoadNotifications, onLoadUsersxBoss } from './eventSlice';
 import { EventCreate, EventError, EventResponse, EventUpdate } from '../types/eventTypes';
 import holidaysApi from '../../api/holidaysApi';
 import { showToast } from '../../holidays/helpers/RenderToast';
@@ -47,6 +47,29 @@ export const loadEventswithBoss = createAsyncThunk(
     }
   }
 );
+
+export const loadUserswithBoss = createAsyncThunk(
+  'event/listUsersxBoss',
+  async (_, { dispatch }) => {
+    try {
+      const response = await holidaysApi.get('/events/listUsersxBoss');
+      const result = response.data;
+      dispatch(onLoadUsersxBoss(result.eventos));
+    } catch (error: any) {
+      console.error('Error al cargar eventos:', error.response.data);
+      if (error.response.data.errors) {
+        dispatch(onErrorEvents(error.response.data.errors));
+        for (const key in error.response.data.errors) {
+          showToast(error.response.data.errors[key].msg);
+        }
+      }else{
+        dispatch(onErrorEvents(error.response.data));
+        showToast(error.response.data.msg, 'error');
+      }
+    }
+  }
+);
+
 
 
 export const loadNotifications = createAsyncThunk(
