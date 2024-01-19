@@ -20,9 +20,10 @@ import { UserRole } from '../../store/types/authTypes';
 interface SidebarProps {
   drawerWidth?: number;
   userRole: UserRole;
+  expanded: boolean;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ drawerWidth = 240, userRole = 'Empleado' }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ drawerWidth = 240, userRole = 'Empleado', expanded }) => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -41,14 +42,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ drawerWidth = 240, userRole = 
   return (
     <Box
       component="nav"
-      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      sx={{ width: { sm: expanded ? drawerWidth : 60 }, flexShrink: { sm: 0 } }}
     >
       <Drawer
         variant="permanent"
         open
         sx={{
           display: { xs: 'block' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: expanded ? drawerWidth : 60,
+            transition: 'width 0.3s ease', // Agregamos una transición suave
+          },
         }}
       >
         <Toolbar>

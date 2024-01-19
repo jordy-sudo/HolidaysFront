@@ -3,6 +3,8 @@ import { Calendar } from '../components/Calendar';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loadEvents } from '../../store/events/thunks';
 
+const title='Mi Calendario';
+
 export const Solicitud = () => {
   const dispatch = useAppDispatch();
   const { events } = useAppSelector((state) => state.event);
@@ -19,6 +21,6 @@ export const Solicitud = () => {
   }, [dispatch]); 
 
   return (
-    <Calendar events={events} />
+    <Calendar events={events} title={title}/>
   );
 }

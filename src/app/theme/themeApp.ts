@@ -7,7 +7,7 @@ export const themeApp = createTheme({
             main: '#64489D'
         },
         secondary:{
-            main: '#FF453C'
+            main: '#F01C4C'
         },
         error:{
             main: red.A400

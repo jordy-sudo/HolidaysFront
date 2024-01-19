@@ -13,6 +13,7 @@ interface AuthState {
   dateOfJoining : string | null;
   email: string | null;
   errorMessage: string | null;  
+  errorUsersMassive: [];
   activeUsers:[];
 }
 
@@ -28,6 +29,7 @@ const initialState: AuthState = {
   dateOfJoining:null,
   email:null,
   errorMessage: null,
+  errorUsersMassive: [],
   activeUsers:[],
 };
 
@@ -67,8 +69,11 @@ const authSlice = createSlice({
     checkingCredentials: (state) => {
       state.status = 'checking';
     },
+    onErrorUsersMassive:(state, action: PayloadAction<[]>)=>{
+      state.errorUsersMassive = action.payload;
+    }
   },
 });
 
-export const { login, loginSession, logout, onLoadUsers, checkingCredentials } = authSlice.actions;
+export const { login, loginSession, logout, onLoadUsers,onErrorUsersMassive,checkingCredentials, } = authSlice.actions;
 export default authSlice.reducer;

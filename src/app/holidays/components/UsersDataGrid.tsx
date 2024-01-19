@@ -4,8 +4,9 @@ import Chip from '@mui/material/Chip';
 import { Usuarios } from '../../store/types/authTypes';
 import { formatDateHelp } from '../helpers/FormateDate';
 import { UserModal } from './UserModal';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { startLoadUsers } from '../../store/auth/thunks';
+import { ModalEmployee } from './ModalEmployee';
 
 const columns = [
     { field: 'name', headerName: 'Nombre', width: 250 },
@@ -35,6 +36,8 @@ interface DataTableProps {
 
 export const UsersDataGrid: React.FC<DataTableProps> = ({ users }) => {
     const [selectedUser, setSelectedUser] = useState<Usuarios | null>(null);
+    const { role } = useAppSelector((state) => state.auth);
+
     const dispatch = useAppDispatch();
     const getRowId = (row: Usuarios) => row._id;
 
@@ -68,12 +71,21 @@ export const UsersDataGrid: React.FC<DataTableProps> = ({ users }) => {
                 }}
                 pageSizeOptions={[10,20,50,100]} 
             />
-            {selectedUser && (
+           {selectedUser && role !== 'Jefe' &&(
                 <UserModal
-                    open={!!selectedUser}
+                    open={true}
                     onClose={closeDetailsUser}
                     user={selectedUser}
-                    title='Detalles de usuario'
+                    title="Detalles de usuario"
+                />
+            )}
+
+            {selectedUser && role === 'Jefe' &&(
+                <ModalEmployee
+                    open={true}
+                    onClose={closeDetailsUser}
+                    user={selectedUser}
+                    title="Solicitud Vacaciones"
                 />
             )}
         </div>

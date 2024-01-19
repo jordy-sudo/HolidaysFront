@@ -1,6 +1,6 @@
-import { Toolbar } from '@mui/material';
+import {  Toolbar, Fade } from '@mui/material';
 import { Box } from '@mui/system'
-import React, { ReactNode } from 'react'
+import  { ReactNode, useState } from 'react'
 import { NavbarHolidays } from '../components/NavbarHolidays';
 import { Sidebar } from '../components/Sidebar';
 import { useAppSelector } from '../../store/hooks';
@@ -14,16 +14,21 @@ const drawerWidth = 240;
 
 export const HolidaysLayout = ({ children }: HolidaysLayoutProps) => {
   const role = useAppSelector((state) => state.auth.role) as UserRole;
-  // Utilizamos una type assertion (as) para indicar que role tiene uno de los valores válidos.
+  const [expanded, setExpanded] = useState(true);
 
+  const handleToggleSidebar = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+  };
   return (
-    <Box sx={{ display: 'flex' }} className="animate__animated animate__fadeIn">
-      <NavbarHolidays drawerWidth={drawerWidth} />
-      {role !== null && <Sidebar drawerWidth={drawerWidth} userRole={role} />}
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        {children}
+    <Fade  in={true}>
+      <Box sx={{ display: 'flex', transition: 'margin-left 0.3s ease' }}>
+        <NavbarHolidays drawerWidth={drawerWidth} expanded={expanded} onToggle={handleToggleSidebar} />
+        {role !== null && <Sidebar drawerWidth={drawerWidth} userRole={role} expanded={expanded} />}
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Toolbar />
+          {children}
+        </Box>
       </Box>
-    </Box>
+    </Fade>
   )
 }

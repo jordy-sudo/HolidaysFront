@@ -47,6 +47,7 @@ export interface User {
     hasPdfDocument: boolean;
     requestedDays: number;
     user: string;
+    ci: string;
     createdAt: string;
     updatedAt: string;
     id: string;

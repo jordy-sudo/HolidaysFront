@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { login, logout, checkingCredentials, loginSession, onLoadUsers } from './authSlice';
+import { login, logout, checkingCredentials, loginSession, onLoadUsers, onErrorUsersMassive } from './authSlice';
 import holidaysApi from '../../api/holidaysApi';
 import { AuthResponse, Credentials, Usuarios } from '../types/authTypes';
 import { onErrorEvents, onLogout } from '../events/eventSlice';
@@ -75,14 +75,15 @@ export const startLoadUsers = createAsyncThunk(
   }
 );
 
-export const processExcelFile = createAsyncThunk<void,File,{
-    dispatch: AppDispatch;
-    state: RootState;
-  }
->('auth/processExcel', async (file, { dispatch }) => {
+export const processExcelFile = createAsyncThunk<void, any[], { 
+  dispatch: AppDispatch;
+  state: RootState;
+}
+>('auth/processExcel', async (usuarios, { dispatch }) => { 
   try {
-    const response = await holidaysApi.post('/auth/new', file);
-    showToast(response.data.msg, 'success');
+    const response = await holidaysApi.post('/auth/new-massive', { usuarios });
+    showToast(response.data.detail, 'success');
+    dispatch(onErrorUsersMassive(response.data.msg));
   } catch (error: any) {
     console.error('Error al cargar usuarios:', error.response.data);
     if (error.response.data.errors) {
@@ -95,8 +96,7 @@ export const processExcelFile = createAsyncThunk<void,File,{
       showToast(error.response.data.msg, 'error');
     }
   }
-}
-);
+});
 
 export const updateUserInfo = createAsyncThunk<Usuarios, { userId: string, userData: Partial<Usuarios> }>(
   'auth/updateInfouser',

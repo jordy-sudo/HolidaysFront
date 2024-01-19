@@ -18,7 +18,7 @@ import {
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { PdfDocument } from './PdfDocument';
 import { Event } from '../../store/types/eventTypes';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -50,22 +50,20 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
 
     const dispatch = useAppDispatch();
 
-    const openConfirmationModal = () => {
-        setConfirmationModalOpen(true);
-    };
-
     const closeConfirmationModal = () => {
         setConfirmationModalOpen(false);
     };
 
     const onAceept = () => {
-        const updateData = {
-            camp: "approved",
-            newStatus: true,
-        };
-
-        dispatch(aceptEvent({ eventId: event.id, requestData: updateData }));
-        onClose();
+        setConfirmationModalOpen(true);
+        if (isConfirmationModalOpen) {
+            const updateData = {
+                camp: "approved",
+                newStatus: true,
+            };
+            dispatch(aceptEvent({ eventId: event.id, requestData: updateData }));
+            onClose();
+        }
     }
 
 
@@ -135,7 +133,9 @@ export const EventDetailsModal: React.FC<EventDetailsModalProps> = ({
                     <CloseIcon />
                 </IconButton>
                 {
-                    role === 'Jefe' && loggedInUserName && event.user && event.user.name && loggedInUserName !== event.user.name && !event.approved && (
+                    (role === 'Jefe' || role === 'Administrador') &&
+                    loggedInUserName && event.user && event.user.name &&
+                    loggedInUserName !== event.user.name && !event.approved && (
                         <IconButton onClick={onAceept} color="warning">
                             <Check />
                         </IconButton>

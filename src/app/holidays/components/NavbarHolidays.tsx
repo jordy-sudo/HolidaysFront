@@ -2,22 +2,22 @@ import React, { ReactElement, useState, useEffect } from "react";
 import {
   AppBar,
   Badge,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
   IconButton,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
-  Card,
-  CardContent,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
 } from "@mui/material";
 import {
+  BeachAccess,
   LogoutOutlined,
+  MenuOpen,
+  Menu as MenuIcon,
   NotificationsOutlined,
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -28,10 +28,14 @@ import { EventDetailsModal } from "./EventDetailsModal";
 
 interface NavbarHolidaysProps {
   drawerWidth?: number;
+  expanded: boolean;
+  onToggle: () => void;
 }
 
 export const NavbarHolidays = ({
   drawerWidth = 240,
+  expanded,
+  onToggle
 }: NavbarHolidaysProps): ReactElement => {
   const dispatch = useAppDispatch();
   const { name } = useAppSelector((state) => state.auth);
@@ -40,7 +44,7 @@ export const NavbarHolidays = ({
 
   useEffect(() => {
     dispatch(loadNotifications());
-  }, []);
+  }, [dispatch]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -65,12 +69,19 @@ export const NavbarHolidays = ({
     setSelectedEvent(event);
   };
 
+  const getColorByIndex = (index: any) => {
+    const colors = ['red', 'green', 'blue'];
+    return colors[index % colors.length];
+  };
+
   return (
     <AppBar
       position="fixed"
       sx={{
-        width: { sm: `calc(100% - ${drawerWidth}px)` },
+        width: { sm: `calc(100% - ${50}px)` },
         ml: { sm: `${drawerWidth}px` },
+        transition: 'width 0.3s ease', // Agregamos una transición suave
+        ...(expanded && { width: `calc(100% - ${drawerWidth}px)` }), // Ajustamos el ancho si está expandido
       }}
     >
       <Toolbar>
@@ -80,6 +91,9 @@ export const NavbarHolidays = ({
           justifyContent="space-between"
           alignItems="center"
         >
+          <IconButton onClick={onToggle} sx={{ mr: 2 }}>
+            {expanded ? <MenuOpen color='secondary' /> : <MenuIcon color='secondary' />}
+          </IconButton>
           <Typography variant="h6" noWrap component="div">
             {name}
           </Typography>
@@ -100,21 +114,20 @@ export const NavbarHolidays = ({
                 </Typography>
               </MenuItem>
             ) : (
-              notifications.map((notification) => (
-                <MenuItem
-                  key={notification.id}
-                  onClick={() => handleNotificationClick(notification)}
-                >
-                  <Card>
-                    <CardContent>
-                      <Typography component="div">
-                        {notification.user.name}
-                      </Typography>
+              notifications.map((notification, index) => (
+                <MenuItem key={notification.id}> {/* Agrega la clave única aquí */}
+                  <ListItem onClick={() => handleNotificationClick(notification)}>
+                    <ListItemIcon>
+                      <BeachAccess style={{ color: getColorByIndex(index) }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography component="div">{notification.user.name}</Typography>
                       <Typography variant="body2" color="textSecondary">
                         Solicita: {notification.title}
                       </Typography>
-                    </CardContent>
-                  </Card>
+                    </ListItemText>
+                  </ListItem>
+                  <Divider />
                 </MenuItem>
               ))
             )}

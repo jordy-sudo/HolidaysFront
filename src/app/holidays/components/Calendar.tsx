@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { Box, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { EventContentArg } from '@fullcalendar/common';
 import { EventDetailsModal } from './EventDetailsModal';
 import { Event } from '../../store/types/eventTypes';
@@ -12,13 +12,14 @@ import { useAppSelector } from '../../store/hooks';
 
 interface CalendarProps {
   events: Event[];
+  title:string;
 }
 
 
-export const Calendar: React.FC<CalendarProps> = ({ events }) => {
+export const Calendar: React.FC<CalendarProps> = ({ events,title }) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const { vacationDays,dateOfJoining } = useAppSelector((state) => state.auth);
+  const { vacationDays } = useAppSelector((state) => state.auth);
   // const firstEventUserVacationDays = events[0]?.user?.vacationDays;
 
 
@@ -35,7 +36,7 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
       hasPdfDocument: false,
       createdAt: eventApi.extendedProps.createdAt,
       updatedAt: eventApi.extendedProps.updatedAt,
-      id: '',
+      id: eventApi.id,
     };
 
     const handleEventClick = () => {
@@ -43,20 +44,23 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
     };
 
     return (
-      <div
+      <Paper
         style={{
           backgroundColor: event.approved ? 'green' : 'gray',
           color: 'white',
           borderRadius: '5px',
           padding: '5px',
           cursor: 'pointer',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+         
         }}
         onClick={handleEventClick}
       >
         <b>{arg.event.title}</b>
         <br />
         {event.user.name}
-      </div>
+      </Paper>
     );
   };
   const closeEventDetailsModal = () => {
@@ -67,7 +71,7 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <Typography variant="h4" gutterBottom>
-          Mi Calendario
+          {title}
         </Typography>
         <Typography sx={{ marginLeft: 10 }} variant="h5" gutterBottom>
           Vacaciones disponibles: {vacationDays} dias
@@ -103,7 +107,7 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
             open={!!selectedEvent}
             onClose={closeEventDetailsModal}
             event={selectedEvent}
-            title='Aprobacion de Solicitud'
+            title='Detalle Solicitud'
           />
         )}
       </Box>

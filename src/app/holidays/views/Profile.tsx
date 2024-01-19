@@ -1,43 +1,29 @@
-import React, { useState,useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
-  Button,
+  Container,
   Grid,
   Card,
-  Avatar,
-  Typography,
-  CardActions,
   CardContent,
-  Box,
-  IconButton,
-  Collapse,
+  CardMedia,
+  Typography,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
-  Divider
+  Divider,
+  Avatar,
+  ListItemAvatar,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { CalendarMonth, Cancel, CheckCircle } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { format } from 'date-fns';
-import { Event } from '../../store/types/eventTypes';
-import { EventDetailsModal } from '../components/EventDetailsModal';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { loadEvents } from '../../store/events/thunks';
-const getInitials = (name: string): string => {
-  const nameArray = name.split(' ');
-  const initials = nameArray.map((word) => word[0]).join('');
-  return initials.toUpperCase();
-};
+
+import { formatDateHelp } from '../helpers/FormateDate';
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [expanded, setExpanded] = React.useState(false);
-  const { name, position, department, email, role } = useAppSelector((state) => state.auth);
   const { events } = useAppSelector((state) => state.event);
-  const avatarSrc ='';
+  const { name, position, email, department } = useAppSelector((state) => state.auth);
 
-  
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -48,151 +34,116 @@ export const Profile = () => {
     };
     fetchEvents();
   }, [dispatch]);
-  const openDetails = (event: Event) => {
-    setSelectedEvent(event);
-  }
 
-  const closeEventDetailsModal = () => {
-    setSelectedEvent(null);
-  };
+  const getInitials = (name: string): string => {
+    const nameArray = name.split(' ');
+    let initials = '';
 
-  const formatDate = (date: string) => {
-    return format(new Date(date), 'dd/MM/yyyy');
+    if (nameArray.length > 0) {
+      initials += nameArray[0][0]; // Primera inicial
+
+      if (nameArray.length > 2) {
+        initials += nameArray[2][0]; // Tercera inicial
+      }
+    }
+
+    return initials.toUpperCase();
   };
 
   return (
-    <Grid container spacing={2}>
-      {/* Card en la parte izquierda */}
-      <Grid item xs={12}>
-        <Typography variant="h4" gutterBottom color="primary">
-          Cuenta
-        </Typography>
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <Card sx={{ maxWidth: 345, margin: '0 auto', textAlign: 'center'}} >
-          <CardContent>
-            <Avatar
-              alt="Avatar"
-              src="URL_DE_LA_IMAGEN"
-              sx={{ width: 100, height: 100, margin: '0 auto 1rem auto' }}
-            >
-              {avatarSrc ? null : getInitials(name || '')}
-            </Avatar>
-            <Typography variant="h5" component="div" gutterBottom color="primary">
-              {name}
-            </Typography>
-            <Typography color="textSecondary">{position}</Typography>
-          </CardContent>
-          <CardActions sx={{ justifyContent: 'center' }}>
-            {/* <Box component="label" sx={{ display: 'inline-flex', alignItems: 'center' }}>
-              <Button
-                variant="outlined"
-                component="div"
-                sx={{ '&:hover': { backgroundColor: 'rgba(128, 0, 128, 0.2)' } }}
-              >
-                Subir Imagen
-                <input type="file" style={{ display: 'none' }} />
-              </Button>
-            </Box> */}
-          </CardActions>
-        </Card>
-      </Grid>
-
-      {/* Card en la parte derecha */}
-      <Grid item xs={12} md={8}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5" component="div" gutterBottom color="primary">
-              Información Adicional
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
-                <Typography variant="subtitle1" color="textSecondary">
-                  Departamento:
-                </Typography>
-                <Typography variant="body1">{department}</Typography>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <Typography variant="subtitle1" color="textSecondary">
-                  Email:
-                </Typography>
-                <Typography variant="body1">{email}</Typography>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <Typography variant="subtitle1" color="textSecondary">
-                  Rol:
-                </Typography>
-                <Typography variant="body1">{role}</Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-          <CardActions disableSpacing>
-            <Box sx={{ marginLeft: 'auto' }}>
-              <IconButton
-                aria-label="show more"
-                onClick={() => setExpanded(!expanded)}
-                aria-expanded={expanded}
-              >
-                <Typography sx={{ fontSize: 13 }} color="text.secondary">
-                  Historial de Solicitudes
-                </Typography>
-                <ExpandMoreIcon />
-              </IconButton>
-            </Box>
-          </CardActions>
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              {events.map((event) => (
-                <List
-                  key={event.id}
-                  sx={{ width: '100%', maxWidth: 845, bgcolor: '#F0F0F0', cursor: 'pointer' }}
+    <section style={{ backgroundColor: '#eee' }}>
+      <Container>
+        <Grid container spacing={4}>
+          <Grid item xs={12} lg={12}>
+            <Card>
+              <CardContent style={{ display: 'flex', alignItems: 'center' }}>
+                <CardMedia
+                  component="div"
+                  style={{
+                    backgroundColor: '#FF453C',
+                    color: '#ffffff',
+                    borderRadius: '50%',
+                    width: '120px',
+                    height: '120px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '36px',
+                    flexShrink: 0,  // Evita que el círculo se encoja
+                  }}
                 >
-                  <ListItem alignItems="flex-start" onClick={() => openDetails(event)}>
-                    <ListItemAvatar>
-                      <Avatar
-                        alt="Remy Sharp"
-                        sx={{
-                          bgcolor: event.approved ? '#49A312' : '#CCCCCC',
-                        }}
-                      >
-                        {event.user.name.charAt(0)}
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={event.user.name}
-                      
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            sx={{ display: 'inline', marginRight: 2 }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                          >
-                            {event.title}
-                          </Typography>
-                          {formatDate(event.start)}---{formatDate(event.end)}
-                        </React.Fragment>
-                      }
-                    />
+                  {getInitials(name || '')}
+                </CardMedia>
+                <List style={{ textAlign: 'left', marginLeft: '16px' }}>
+                  <ListItem>
+                    <Typography variant="h5" mb={3}>
+                      {name}
+                    </Typography>
                   </ListItem>
-                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <Typography variant="subtitle1" mb={1}>
+                      {department}
+                    </Typography>
+                  </ListItem>
+                  <ListItem>
+                    <Typography variant="subtitle2" mb={4}>
+                      {position}, {email}
+                    </Typography>
+                  </ListItem>
                 </List>
-              ))}
-            </CardContent>
-          </Collapse>
-        </Card>
-        {selectedEvent && (
-          <EventDetailsModal
-            open={!!selectedEvent}
-            onClose={closeEventDetailsModal}
-            event={selectedEvent}
-            title='Detalle de Solicitud'
-          />
-        )}
-      </Grid>
-    </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} lg={12}>
+            <Card variant="outlined" sx={{ mt: 2 }}>
+              <CardContent>
+                <Typography variant="h5" mb={2}>
+                  Solicitudes realizadas
+                </Typography>
+                <List>
+                  {events.map((event, index) => (
+                    <React.Fragment key={index}>
+                      <ListItem className="d-flex justify-content-between align-items-center">
+                        <ListItemAvatar>
+                          <Avatar sx={{ backgroundColor: event.approved ? '#4CAF50' : '#FF453C' }}>
+                            {event.approved ? <CheckCircle /> : <Cancel />}
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={event.title}
+                          secondary={
+                            <React.Fragment>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                <CalendarMonth fontSize="small" />
+                                <span className="ml-2">
+                                  {formatDateHelp(event.start)} -Hasta- {formatDateHelp(event.end)}
+                                </span>
+                              </Typography>
+                            </React.Fragment>
+                          }
+                        />
+                        <Typography
+                          variant="body2"
+                          color={event.approved ? 'success.main' : 'error.main'}
+                          sx={{
+                            fontWeight: 'bold',
+                            textTransform: 'uppercase',
+                            letterSpacing: 1,
+                          }}
+                        >
+                          {event.approved ? 'Aprobado' : 'Sin Aprobar'}
+                        </Typography>
+                      </ListItem>
+                      {index < events.length - 1 && <Divider />}
+                    </React.Fragment>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
+    </section>
   );
 };

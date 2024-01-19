@@ -4,6 +4,15 @@ import { EventCreate, EventError, EventResponse, EventUpdate } from '../types/ev
 import holidaysApi from '../../api/holidaysApi';
 import { showToast } from '../../holidays/helpers/RenderToast';
 
+const handleApiError = (error: any, dispatch: any) => {
+  dispatch(onErrorEvents(error.response?.data?.errors || error.response?.data));
+  showToast(error.response?.data?.msg || 'Error al cargar eventos', 'error');
+};
+
+const dispatchCommonActions = (dispatch: any, ...actions: any[]) => {
+  actions.forEach(action => dispatch(action()));
+};
+
 export const loadEvents = createAsyncThunk(
   'event/loadEvents',
   async (_, { dispatch }) => {
@@ -13,15 +22,7 @@ export const loadEvents = createAsyncThunk(
       dispatch(onLoadEvents(result));
     } catch (error: any) {
       console.error('Error al cargar eventos:', error.response.data);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      }else{
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg, 'error');
-      }
+      handleApiError(error, dispatch);
     }
   }
 );
@@ -35,15 +36,7 @@ export const loadEventswithBoss = createAsyncThunk(
       dispatch(onLoadEventswithBoss(result));
     } catch (error: any) {
       console.error('Error al cargar eventos:', error.response.data);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      }else{
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg, 'error');
-      }
+      handleApiError(error, dispatch);
     }
   }
 );
@@ -57,20 +50,10 @@ export const loadUserswithBoss = createAsyncThunk(
       dispatch(onLoadUsersxBoss(result.eventos));
     } catch (error: any) {
       console.error('Error al cargar eventos:', error.response.data);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      }else{
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg, 'error');
-      }
+      handleApiError(error, dispatch);
     }
   }
 );
-
-
 
 export const loadNotifications = createAsyncThunk(
   'event/loadEvents',
@@ -81,15 +64,7 @@ export const loadNotifications = createAsyncThunk(
       dispatch(onLoadNotifications(result));
     } catch (error: any) {
       console.error('Error al cargar eventos:', error.response.data);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      }else{
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg, 'error');
-      }
+      handleApiError(error, dispatch);
     }
   }
 );
@@ -103,15 +78,7 @@ export const loadDocuments = createAsyncThunk(
       dispatch(onLoadDocuments(result));
     } catch (error: any) {
       console.error('Error al cargar documentos:', error.response.data);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      }else{
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg, 'error');
-      }
+      handleApiError(error, dispatch);
     }
   }
 );
@@ -120,22 +87,26 @@ export const createEvent = createAsyncThunk(
   'event/createEvent',
   async(requestData: EventCreate, { dispatch })=>{
     try {
-      const response = await holidaysApi.post<EventCreate>('/events',requestData);
-      const result = response.data;
+      await holidaysApi.post<EventCreate>('/events',requestData);
       showToast('Solicitud Creada', 'success');
-      dispatch(loadEvents());
-      dispatch(loadNotifications());
+      dispatchCommonActions(dispatch, loadEvents, loadNotifications);
     } catch (error:any) {
       console.error('Error al crear evento:', error.response.data.errors);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      } else {
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg);
-      }
+      handleApiError(error, dispatch);
+    }
+  }
+);
+
+export const createEventEmployee = createAsyncThunk(
+  'event/createEventEmployee',
+  async(requestData: any, { dispatch })=>{
+    try {
+      await holidaysApi.post<EventCreate>('/events/event-employee',requestData);
+      showToast('Solicitud Creada', 'success');
+      dispatchCommonActions(dispatch, loadEvents, loadNotifications);
+    } catch (error:any) {
+      console.error('Error al crear evento:', error.response.data.errors);
+      handleApiError(error, dispatch);
     }
   }
 );
@@ -148,21 +119,11 @@ export const aceptEvent = createAsyncThunk(
       const result = response.data;
       if(requestData.camp !== 'show'){
         showToast(result.msg, 'success');
+        dispatchCommonActions(dispatch, loadEvents, loadNotifications, loadDocuments, loadEventswithBoss);
       }
-      dispatch(loadEvents());
-      dispatch(loadNotifications());
-      dispatch(loadDocuments());
     } catch (error: any) {
       console.error('Error al aceptar evento:', error.response.data.errors);
-      if (error.response.data.errors) {
-        dispatch(onErrorEvents(error.response.data.errors));
-        for (const key in error.response.data.errors) {
-          showToast(error.response.data.errors[key].msg);
-        }
-      } else {
-        dispatch(onErrorEvents(error.response.data));
-        showToast(error.response.data.msg);
-      }
+      handleApiError(error, dispatch);
     }
   }
 );

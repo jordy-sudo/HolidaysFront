@@ -1,6 +1,6 @@
 import React from 'react';
-import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors';
 import { Grid, Typography } from '@mui/material';
+import { AddTaskOutlined } from '@mui/icons-material';
 
 export const NothingSelected: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ export const NothingSelected: React.FC = () => {
       sx={{ minHeight: 'calc(100vh - 110px)', backgroundColor: 'primary.main', borderRadius: 3 }}
     >
       <Grid item xs={12}>
-        <RunningWithErrorsIcon sx={{ fontSize: 100, color: 'white' }} />
+        <AddTaskOutlined sx={{ fontSize: 100, color: 'white' }} />
       </Grid>
       <Grid item xs={12}>
         <Typography color="white" variant="h5">

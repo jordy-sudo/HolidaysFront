@@ -32,6 +32,8 @@ export const HolidaysPage: React.FC = () => {
   };
 
   const CreateEvent = (data: any) => {
+    // console.log(data);
+    
     const formattedData = {
       ...data,
       start: moment(data.start).startOf('day').format(), 
@@ -40,6 +42,7 @@ export const HolidaysPage: React.FC = () => {
     dispatch(createEvent(formattedData));
   };
   
+
 
  
 

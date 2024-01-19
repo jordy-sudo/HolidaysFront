@@ -11,9 +11,12 @@ import {
     TableContainer,
     TableRow,
     useTheme,
-    Button
+    Button,
+    Select,
+    MenuItem
 } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import { SelectChangeEvent } from '@mui/material';
 import { Usuarios } from '../../store/types/authTypes';
 import { formatDateHelp } from '../helpers/FormateDate';
 import { useAppDispatch } from '../../store/hooks';
@@ -56,10 +59,18 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
         }));
     };
 
+    const handleSelectChange = (e: SelectChangeEvent<string>) => {
+        const { name, value } = e.target;
+        setEditedUser((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      };
 
     const handleSaveChanges = () => {
         setConfirmationModalOpen(true);
-        if(isConfirmationModalOpen){
+        // console.log({ userId: editedUser._id, userData: editedUser });
+        if (isConfirmationModalOpen) {
             dispatch(updateUserInfo({ userId: editedUser._id, userData: editedUser }));
             setIsEditMode(false);
         }
@@ -89,12 +100,17 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
                                 <TableCell style={{ fontWeight: 'bold' }}>Rol</TableCell>
                                 {isEditMode ? (
                                     <TableCell>
-                                        <input
-                                            type="text"
+                                        <Select
                                             value={editedUser.role}
-                                            onChange={(e) => handleInputChange(e)}
+                                            onChange={(e) => handleSelectChange(e)}
                                             name="role"
-                                        />
+                                            style={{ minWidth: '120px', maxHeight: '40px' }}
+                                        >
+                                            <MenuItem value="Empleado">Empleado</MenuItem>
+                                            <MenuItem value="Jefe">Jefe</MenuItem>
+                                            <MenuItem value="Administrador">Administrador</MenuItem>
+                                            <MenuItem value="rrhh">rrhh</MenuItem>    
+                                        </Select>
                                     </TableCell>
                                 ) : (
                                     <TableCell>{editedUser.role}</TableCell>
@@ -212,7 +228,7 @@ export const UserModal: React.FC<UserDetailsModalProps> = ({
                 open={isConfirmationModalOpen}
                 onClose={closeConfirmationModal}
                 onConfirm={handleSaveChanges}
-                title='Aprobacion de vacaciones'
+                title='Edicion de datos (usuario)'
             />
         </Dialog>
 
